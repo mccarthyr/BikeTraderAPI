@@ -1,5 +1,6 @@
 {
     "name": "software-desk/bike-trader-api-bundle",
+    "type": "symfony-bundle",
     "description": "This is a learning/demonstration bundle showing various symfony code techniques",
     "keywords": ["learning symfony REST and design techniques", "bundle"],
     "homepage": "https://github.com/mccarthyr/BikeTraderAPI.git",
