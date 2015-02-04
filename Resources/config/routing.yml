@@ -1,0 +1,3 @@
+software_desk_bike_trader_api_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SoftwareDeskBikeTraderAPIBundle:Default:index }

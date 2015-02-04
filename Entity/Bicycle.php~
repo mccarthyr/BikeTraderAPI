@@ -1,0 +1,48 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: richard
+ * Date: 1/20/15
+ * Time: 9:34 PM
+ */
+
+namespace SoftwareDesk\BikeTraderAPIBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use SoftwareDesk\BikeTraderAPIBundle\Model\Bicycle as BaseBicycle;
+
+/**
+ * Class Bicycle
+ * This class extends the BaseBicycle and provides the metadata mapping
+ * for its properties and the new ones for our custom requirements.
+ *
+ * @package SoftwareDesk\BikeTraderAPIBundle\Entity
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="bike_trader_bicycle")
+ */
+class Bicycle extends BaseBicycle
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=30)
+     */
+    protected $name;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $description;
+
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    protected $type;
+}
+

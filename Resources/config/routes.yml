@@ -1,0 +1,6 @@
+software_desk_bike_trader_page:
+    type: rest
+    prefix: /v1/trader
+    resource: "@SoftwareDeskBikeTraderAPIBundle/Controller/BikeTraderController.php"
+    name_prefix: api_1_ # naming collision
+

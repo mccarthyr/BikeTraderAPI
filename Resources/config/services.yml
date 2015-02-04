@@ -1,0 +1,58 @@
+parameters:
+    software_desk_bike_trader_api.model.bicycle.class: SoftwareDesk\BikeTraderAPIBundle\Entity\Bicycle
+        #SoftwareDesk\BikeTraderAPIBundle\Document\Bicycle
+services:
+#    software_desk_bike_trader_api.example:
+#        class: SoftwareDesk\BikeTraderAPIBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+    software_desk_bike_trader_api.bike_trader_manager:
+        class: SoftwareDesk\BikeTraderAPIBundle\Entity\BikeTraderManager
+        arguments:
+            #- @doctrine.orm.default_entity_manager
+            - @software_desk_bike_trader_api.bike_trader_repository
+            #- @software_desk_bike_trader_api.bike_trader_mongodb_repository
+            - @software_desk_bike_trader_api.convert_entity_to_object
+
+    # Using the Doctrine Factory Service to get our custom repository
+    software_desk_bike_trader_api.bike_trader_repository:
+      #class: Doctrine\ORM\EntityRepository
+      class: SoftwareDesk\BikeTraderAPIBundle\Entity\DoctrineORMBikeTraderRepository
+      #factory_service: doctrine.orm.default_entity_manager
+      factory_service: doctrine.orm.entity_manager
+      factory_method: getRepository
+      arguments:
+          - SoftwareDesk\BikeTraderAPIBundle\Entity\Bicycle
+
+    software_desk_bike_trader_api.bike_trader_mongodb_repository:
+      class: SoftwareDesk\BikeTraderAPIBundle\Repository\DoctrineODMBikeTraderRepository
+      factory_service: doctrine.odm.mongodb.document_manager
+      factory_method: getRepository
+      arguments:
+          - SoftwareDesk\BikeTraderAPIBundle\Document\Bicycle
+
+#    software_desk_bike_trader_api.create_form_type_bike:
+#        class: SoftwareDesk\BikeTraderAPIBundle\Form\Type\BicycleType
+#        tags:
+#            - { name: form.type, alias: createBike }
+
+
+
+    software_desk_bike_trader_api.create_form_type_bike:
+        class: SoftwareDesk\BikeTraderAPIBundle\Form\Type\BicycleType
+#        arguments:
+#            - %software_desk_bike_trader_api.model.bicycle.class%
+        tags:
+            - { name: form.type, alias: createBike }
+
+
+    software_desk_bike_trader_api.convert_entity_to_object:
+        class: SoftwareDesk\BikeTraderAPIBundle\Utils\ConvertingEntityToObject
+        arguments: [@serializer]
+
+
+#===================================================================================
+#    <parameters>
+#        <parameter key="fos_comment.model.thread.class">FOS\CommentBundle\Entity\Thread</parameter>
+#</parameters>
+# <argument>%fos_comment.model.thread.class%</argument>
