@@ -1,0 +1,21 @@
+{
+    "name": "software-desk/bike-trader-api-bundle",
+    "description": "This is a learning/demonstration bundle showing various symfony code techniques",
+    "keywords": ["learning symfony REST and design techniques", "bundle"],
+    "homepage": "https://github.com/mccarthyr/BikeTraderAPI.git",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Richard McCarthy",
+            "email": "mccarthy.richard@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": { "SoftwareDesk\\BikeTradeAPIBundle": "" }
+    },
+    "minimum-stability": "stable",
+    "target-dir": "SoftwareDesk/BikeTraderAPIBundle"
+}
