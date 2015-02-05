@@ -24,7 +24,7 @@
         "jms/serializer-bundle":          "~0.12"
     },
     "autoload": {
-        "psr-0": { "SoftwareDesk\\BikeTradeAPIBundle": "" }
+        "psr-0": { "SoftwareDesk\\BikeTraderAPIBundle": "" }
     },
     "minimum-stability": "stable",
     "target-dir": "SoftwareDesk/BikeTraderAPIBundle"
