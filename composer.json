@@ -8,8 +8,8 @@
     "authors": [
         {
             "name": "Richard McCarthy",
-            "email": "mccarthy.richard@gmail.com"
-	    "homepage": "http://www.softwaredesk.co.uk"
+            "email": "mccarthy.richard@gmail.com",
+	        "homepage": "http://www.softwaredesk.co.uk"
         }
     ],
     "require": {
