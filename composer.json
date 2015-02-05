@@ -8,8 +8,7 @@
     "authors": [
         {
             "name": "Richard McCarthy",
-            "email": "mccarthy.richard@gmail.com",
-	        "homepage": "http://www.softwaredesk.co.uk"
+            "email": "mccarthy.richard@gmail.com"
         }
     ],
     "require": {
@@ -23,6 +22,7 @@
         "symfony/serializer":             "~2.2",
         "symfony/yaml":                   "~2.2",
         "jms/serializer-bundle":          "~0.12"
+    },
     "autoload": {
         "psr-0": { "SoftwareDesk\\BikeTradeAPIBundle": "" }
     },
