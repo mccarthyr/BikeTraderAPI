@@ -3,17 +3,26 @@
     "type": "symfony-bundle",
     "description": "This is a learning/demonstration bundle showing various symfony code techniques",
     "keywords": ["learning symfony REST and design techniques", "bundle"],
-    "homepage": "https://github.com/mccarthyr/BikeTraderAPI.git",
+    "homepage": "https://github.com/mccarthyr/BikeTraderAPI",
     "license": "MIT",
     "authors": [
         {
             "name": "Richard McCarthy",
             "email": "mccarthy.richard@gmail.com"
+	    "homepage": "http://www.softwaredesk.co.uk"
         }
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.2",
+        "symfony/framework-bundle":       "~2.2"
     },
+    "require-dev": {
+        "sensio/framework-extra-bundle":  "~2.2",
+        "symfony/form":                   "~2.2",
+        "symfony/validator":              "~2.2",
+        "symfony/serializer":             "~2.2",
+        "symfony/yaml":                   "~2.2",
+        "jms/serializer-bundle":          "~0.12"
     "autoload": {
         "psr-0": { "SoftwareDesk\\BikeTradeAPIBundle": "" }
     },
