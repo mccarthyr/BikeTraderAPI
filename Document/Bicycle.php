@@ -9,6 +9,7 @@
 namespace SoftwareDesk\BikeTraderAPIBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use JMS\Serializer\Annotation\Exclude;
 use SoftwareDesk\BikeTraderAPIBundle\Model\Bicycle as BaseBicycle;
 
 
@@ -21,7 +22,7 @@ use SoftwareDesk\BikeTraderAPIBundle\Model\Bicycle as BaseBicycle;
  * @package SoftwareDesk\BikeTraderAPIBundle\Document
  *
  * @MongoDB\Document(repositoryClass="SoftwareDesk\BikeTraderAPIBundle\Repository\DoctrineODMBikeTraderRepository")
- *
+ * @MongoDB\HasLifecycleCallbacks()
  */
 class Bicycle extends BaseBicycle
 {
@@ -44,6 +45,17 @@ class Bicycle extends BaseBicycle
      * @MongoDB\String
      */
     protected $type;
+
+
+    /**
+     * @MongoDB\String
+     * @Exclude
+     *
+     * This does not need to be deserialized anytime or modified
+     * manually as the PrePersist and PreUpdate callback
+     * will set the value each time automatically.
+     */
+    protected $createdAt;
 
 
 
@@ -134,4 +146,41 @@ class Bicycle extends BaseBicycle
         $this->id = $id;
         return $this;
     }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Bicycle
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @MongoDB\PrePersist()
+     * @MongoDB\PreUpdate()
+     */
+    public function setCreatedAtValue()
+    {
+        //$this->createdAt = new \DateTime();
+        $dateTime = new \DateTime();
+        $this->createdAt = $dateTime -> getTimestamp();
+    }
+
+
+
 }

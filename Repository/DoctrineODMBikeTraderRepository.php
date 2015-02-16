@@ -46,10 +46,67 @@ class DoctrineODMBikeTraderRepository extends DocumentRepository implements Bike
 
     public function findBikeById($id)
     {
+        // 54e1e0c5f889de862b8b4567
+//        $this -> getDocumentManager() -> clear();
+
         $bike = $this -> getDocumentManager()->getRepository('SoftwareDeskBikeTraderAPIBundle:Bicycle')
             ->find($id);
+
         return $bike;
     }
+
+    /**
+     * This detaches all documents that are currently managed
+     * by the document manager instance.
+     */
+    public function clearTheEntityManager()
+    {
+        $this -> getDocumentManager() -> clear();
+    }
+
+
+    public function getLastModifiedTimestampForBike($id)
+    {
+// 54e1e0c5f889de862b8b4567
+
+//        echo PHP_EOL.'In the TIMESTAMP method now'.PHP_EOL;
+
+        $query = $this -> getDocumentManager() -> createQueryBuilder('SoftwareDeskBikeTraderAPIBundle:Bicycle')
+            -> select('createdAt')
+            -> field('id') -> equals("$id")
+            -> getQuery()->execute();
+
+// -> where("function() { return this.name == 'Prestigio MongoDB Fixture'; }")
+// This is another way of reducing results using javascript in the where clause.
+
+        $bikeObject = $query -> getSingleResult();
+        /**
+         * Here Doctrine returns the result as an Object with the queried Id field
+         * and the selected field also.
+         */
+//print_r($bikeObject);
+//print_r(var_dump($bikeObject -> getCreatedAt()));
+//echo PHP_EOL.PHP_EOL;
+//exit;
+
+        return $bikeObject -> getCreatedAt();
+
+
+/*        $query = $this -> getDocumentManager() -> createQueryBuilder()
+            ->select('b.createdAt')
+            -> from('SoftwareDeskBikeTraderAPIBundle:Bicycle', 'b')
+            -> where('b.id = :bikeId')
+            -> setParameter('bikeId', $id)
+            -> getQuery();
+
+        $timestamp = $query -> getSingleResult();
+        return $timestamp;
+*/
+
+    }
+
+
+
 
 
     public function getPrimaryKeyForEntity($entity)

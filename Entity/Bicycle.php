@@ -9,6 +9,8 @@
 namespace SoftwareDesk\BikeTraderAPIBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\SerializedName;
 use SoftwareDesk\BikeTraderAPIBundle\Model\Bicycle as BaseBicycle;
 
 /**
@@ -20,6 +22,7 @@ use SoftwareDesk\BikeTraderAPIBundle\Model\Bicycle as BaseBicycle;
  *
  * @ORM\Table(name="bike_trader_bicycle")
  * @ORM\Entity(repositoryClass="SoftwareDesk\BikeTraderAPIBundle\Entity\DoctrineORMBikeTraderRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Bicycle extends BaseBicycle
 {
@@ -44,6 +47,15 @@ class Bicycle extends BaseBicycle
      * @ORM\Column(type="string", length=20)
      */
     protected $type;
+
+    /**
+     * @ORM\Column(type="string")
+     * @Exclude()
+     * This does not need to be deserialized anytime or modified
+     * manually as the PrePersist and PreUpdate callback
+     * will set the value each time automatically.
+     */
+    protected $createdAt;
 
     /**
      * Get id
@@ -123,4 +135,41 @@ class Bicycle extends BaseBicycle
     {
         return $this->type;
     }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Bicycle
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate()
+     */
+    public function setCreatedAtValue()
+    {
+        //$this->createdAt = new \DateTime();
+        $dateTime = new \DateTime();
+        $this->createdAt = $dateTime -> getTimestamp();
+    }
+
+
+
 }

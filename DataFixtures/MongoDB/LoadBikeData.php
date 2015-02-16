@@ -22,6 +22,9 @@ class LoadBikeData implements FixtureInterface
         $bike -> setDescription('MongoDB Fixture: Test data description');
         $bike -> setType('road');
 
+        $dateTime = new \DateTime();
+        $bike -> setCreatedAt($dateTime -> getTimestamp());
+
         $manager -> persist($bike);
         $manager -> flush();
     }

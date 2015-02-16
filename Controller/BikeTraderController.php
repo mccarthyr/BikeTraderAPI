@@ -70,6 +70,11 @@ class BikeTraderController extends FOSRestController
     }
 
 /*
+
+GET CURMPL SAMPLE COMMAND...
+curl -v http://symfonyclassroom/app_dev.php/api/v1/trader/bike/type/road
+
+
 POST CURL SAMPLE COMMAND...
 
 curl -H "Content-Type: application/json"
@@ -209,6 +214,170 @@ curl -X DELETE http://symfonyclassroom/app_dev.php/api/v1/trader/bikes/6
 
     }
 
+
+// ****** NEW CODE FOR IMPLEMENTING DEMONSTRATION CACHING MODELS ****
+
+// GET CURMPL SAMPLE COMMAND...
+//  curl -v http://symfonyclassroom/app_dev.php/api/v1/trader/cache/bike/type/road
+// FOR PRODUCTION CAN USE:
+// curl -v http://symfonyclassroom/api/v1/trader/cache/bike/type/road
+
+/*
+ * Set up the Symfony Reverse Proxy and the above cache response headers
+ * that are set will start to come into effect.
+ */
+
+    /**
+     * @param Request $request - Current request
+     * @param $type
+     *
+     * @Route("/cache/bike/type/{type}")
+     *
+     * @return FOSView
+     */
+    public function getCacheBikeTypeAction(Request $request, $type)
+    {
+
+        // ***NOTE*** - This is a sample using the EXPIRATION CACHE Model.
+
+        // Call the Bike Trader Manager (a service)
+        $bikeTraderManager = $this -> get('software_desk_bike_trader_api.bike_trader_manager');
+        $bike = $bikeTraderManager -> retrieveBike( array('type', $type) );
+
+        if (empty($bike)) {
+            throw new ResourceNotFoundException('No such bike exists');
+        }
+
+        $view = $this -> view($bike, 200);
+
+        //$view -> getResponse() -> setMaxAge(600);
+        //$view -> getResponse() -> setPublic();
+        // Or it can be written this way also
+        $view -> getResponse() -> setCache( array( 'max_age' => '200', 'public' => true ) );
+
+        return $this -> handleView($view);
+    }
+
+
+
+
+
+    /**
+     * @param Request $request - Current request
+     * @param $id
+     *
+     * @Route("/cache/validation/bike/{id}")
+     *
+     * @return FOSView
+     */
+    public function getCacheValidationBikeTypeAction(Request $request, $id)
+    {
+        // Call the Bike Trader Manager (a service)
+        $bikeTraderManager = $this -> get('software_desk_bike_trader_api.bike_trader_manager');
+
+        $timestamp = $bikeTraderManager -> getLastModifiedTimestampForBike($id);
+
+        $view = $this -> view();
+        $view -> getResponse() -> setPublic();
+
+        $lastModified = new \DateTime();
+        $lastModified -> setTimestamp($timestamp);
+
+        $view -> getResponse() -> setLastModified($lastModified);
+        $view -> getResponse() -> setPublic();
+
+        if ( $view -> getResponse() -> isNotModified($request) ) {
+            echo PHP_EOL.'---IN THE REQUEST NOT MODIFIED CONDITION'.PHP_EOL;
+            return $this -> handleView($view);
+        }
+
+
+        $bikeTraderManager -> clearTheEntityManager();
+        $bike = $bikeTraderManager -> retrieveBike( array('id', $id) );
+
+        if (empty($bike)) {
+            throw new ResourceNotFoundException('No such bike exists');
+        }
+
+        $view -> setData($bike);
+        $view -> setStatusCode(200);
+        return $this -> handleView($view);
+    }
+
+
+
+    /**
+     * @param Request $request - Current request
+     * @param $id
+     *
+     * @Route("/cache/expiration/validation/bike/{id}")
+     *
+     * @return FOSView
+     */
+    public function getCacheExpirationValidationBikeTypeAction(Request $request, $id)
+    {
+
+        /**
+         * This combines the Expiration and Validation models to produce
+         * the usual foundation of HTTP Caching models.
+         * Expiration will take priority as usual with the validation headers been
+         * set each time the expiration has expired. If the validation header has
+         * not changed since the last request then a 304 not modified response is
+         * returned immediately and the cached value served up.
+         */
+
+        // Call the Bike Trader Manager (a service)
+        $bikeTraderManager = $this -> get('software_desk_bike_trader_api.bike_trader_manager');
+
+        $timestamp = $bikeTraderManager -> getLastModifiedTimestampForBike($id);
+
+        $view = $this -> view();
+        $view -> getResponse() -> setPublic();
+
+        // Set the timestamp into DateTime format for the HTTP Response header.
+        $lastModified = new \DateTime();
+        $lastModified -> setTimestamp($timestamp);
+
+        $view -> getResponse() -> setLastModified($lastModified);
+        $view -> getResponse() -> setMaxAge(60);
+        $view -> getResponse() -> setPublic();
+
+        if ( $view -> getResponse() -> isNotModified($request) ) {
+            echo PHP_EOL.'---IN THE REQUEST NOT MODIFIED CONDITION'.PHP_EOL;
+            return $this -> handleView($view);
+        }
+
+        $bikeTraderManager -> clearTheEntityManager();
+        $bike = $bikeTraderManager -> retrieveBike( array('id', $id) );
+        if (empty($bike)) {
+            throw new ResourceNotFoundException('No such bike exists');
+        }
+
+        $view -> setData($bike);
+        $view -> setStatusCode(200);
+        return $this -> handleView($view);
+    }
+
+
+// SAME CURL COMMANDS TO EXECUTE THE REST API...
+
+// curl -H "Content-Type: application/x-www-form-urlencoded" -X PUT
+// -d name=updatedname -d description=udpateddescription
+// http://symfonyclassroom/app_dev.php/api/v1/trader/bikes/6
+
+// curl -H "Content-Type: application/x-www-form-urlencoded" -X PUT -d name=updatedname -d description=udpateddescription http://symfonyclassroom/app_dev.php/api/v1/trader/bikes/6
+
+// curl -X DELETE http://symfonyclassroom/app_dev.php/api/v1/trader/bikes/6
+
+// FOR GET PRODUCTION CAN USE:
+// curl -v http://symfonyclassroom/api/v1/trader/cache/bike/type/road
+
+// 54e1e0c5f889de862b8b4567
+// curl -H "Content-Type: application/x-www-form-urlencoded" -X PUT -d name=updatedname -d description=udpateddescription http://symfonyclassroom/app_dev.php/api/v1/trader/bikes/54e1e0c5f889de862b8b4567
+
+// POST CURL SAMPLE COMMAND...
+
+// curl -H "Content-Type: application/json" -d '{"name":"bikename","description":"postdescription","type":"road"}' http://symfonyclassroom/app_dev.php/api/v1/trader/bikes
 
 
 }

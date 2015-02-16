@@ -102,6 +102,9 @@ class BikeTraderManager extends BaseBikeTraderManager
     // Assuming simple case with retrieval options for now...
     public function retrieveBike( array $retrievalOptions )
     {
+
+echo PHP_EOL.PHP_EOL.'-- Now in the RetrieveBike method ---'.PHP_EOL.PHP_EOL;
+
         // Example of $retrievalOptions - array('type', $type)
         if ( is_array($retrievalOptions) ) {
 
@@ -122,6 +125,24 @@ class BikeTraderManager extends BaseBikeTraderManager
         return $bike;
 
     }
+
+    public function findBikeById($id)
+    {
+        $bike = $this -> bikeTraderRepository -> findBikeById($id);
+        return $bike;
+    }
+
+    public function clearTheEntityManager()
+    {
+        $this -> bikeTraderRepository -> clearTheEntityManager();
+    }
+
+    public function getLastModifiedTimestampForBike($id)
+    {
+        $timestamp = $this -> bikeTraderRepository -> getLastModifiedTimestampForBike($id);
+        return $timestamp;
+    }
+
 
     public function getEntityClassInstance()
     {
@@ -170,11 +191,9 @@ class BikeTraderManager extends BaseBikeTraderManager
      */
     public function organiseArrayToBeUpdated($id, array $parameterArrayOfUpdates)
     {
-
         $existingBike = $this -> getExistingBikeById($id);
         // Converting the bike entity to a standard object.
         $bikeEntityConvertedToObject = $this -> bikeEntityToObjectConverter -> convertEntityToObject($existingBike);
-
         $updatedArray = array_merge( get_object_vars($bikeEntityConvertedToObject), $parameterArrayOfUpdates );
 
         // Must remove the primary key before submitting the form data array.
