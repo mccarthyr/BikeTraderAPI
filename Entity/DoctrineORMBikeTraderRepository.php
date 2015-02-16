@@ -42,6 +42,32 @@ class DoctrineORMBikeTraderRepository extends EntityRepository implements BikeTr
         return $bike;
     }
 
+    /**
+     * This detaches all entities that are currently managed
+     * by the entity manager instance.
+     */
+    public function clearTheEntityManager()
+    {
+        $this -> getEntityManager() -> clear();
+    }
+
+    public function getLastModifiedTimestampForBike($id)
+    {
+
+//*** NOTE  - THIS METHOD NEEDS EXCEPTION HANDLING FOR WHEN THE ID DOES NOT EXISTS
+        // AS IT CAUSES IT TO CRASH...
+
+        $query = $this -> getEntityManager() -> createQueryBuilder()
+            ->select('b.createdAt')
+            -> from('SoftwareDeskBikeTraderAPIBundle:Bicycle', 'b')
+            -> where('b.id = :bikeId')
+            -> setParameter('bikeId', $id)
+            -> getQuery();
+
+        $timestamp = $query -> getSingleResult();
+        return $timestamp['createdAt'];
+    }
+
 
     public function getPrimaryKeyForEntity($entity)
     {
